@@ -6,3 +6,40 @@
   --card-bg: #d9ecb5;
   --shadow-card: #90a955;
 }
+
+body {
+  color: var(--font);
+  background-color: var(--primary-bg);
+}
+
+header {
+  justify-content: space-between;
+  gap: clamp(8px, 1.25vw, 16px);
+  padding: clamp(8px, 1.25vw, 16px);
+  padding: auto;
+  background-color: var(--secondary-bg);
+  color: var(--primary-bg);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  margin: 0 clamp(0px, 2vw, 10px) 0 clamp(20px, 2vw, 25px);
+  max-width: min(100%, 1280px);
+  margin-top: clamp(8px, 1.25vw, 16px);
+}
+
+section {
+  border: #000000 solid 3px;
+  padding: clamp(8px, 1.25vw, 16px);
+  margin-bottom: 2vh;
+  box-shadow: var(--shadow-card) -7px 7px 5px 5px;
+  background-color: var(--card-bg);
+}
+
+h2 {
+  color: var(--h2);
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 5px;
+}

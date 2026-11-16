@@ -73,3 +73,46 @@ h2 {
   margin: auto;
   font-weight: 600;
 }
+.carousel {
+  overflow: hidden;
+  width: 100%;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+}
+
+.carousel-slider {
+  display: flex;
+  width: max-content;
+  animation: carousel-scroll 30s linear infinite;
+}
+
+.carousel:hover .carousel-slider {
+  animation-play-state: paused;
+}
+
+.carousel-slide {
+  flex: 0 0 auto;
+  padding-right: 1rem; /* use padding, not gap, so the loop is exact */
+}
+
+.carousel-slide img {
+  display: block;
+  height: 250px;
+  width: auto;
+  border-radius: 8px;
+}
+
+@keyframes carousel-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-slider {
+    animation-duration: 90s;
+  }
+}

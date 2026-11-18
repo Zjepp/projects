@@ -130,6 +130,11 @@ main {
   margin-top: clamp(8px, 1.25vw, 16px);
 }
 
+main h1 {
+  font-size: 2.5rem;
+  margin-bottom: 5vh;
+}
+
 section {
   border: #000000 solid 3px;
   padding: clamp(8px, 1.25vw, 16px);

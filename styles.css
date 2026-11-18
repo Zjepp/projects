@@ -63,6 +63,7 @@ header {
   display: flex;
   justify-self: end;
 }
+
 .header-right svg {
   margin: 0 0 clamp(4px, 0.6vw, 8px) clamp(4px, 0.6vw, 8px);
   fill: #fff;
@@ -154,7 +155,8 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 3vh;
+  margin-top: 3vh;
+  margin-bottom: 4vh;
 }
 
 .techstack div {

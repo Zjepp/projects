@@ -74,24 +74,22 @@ h2 {
   font-weight: 600;
 }
 
-/* ---------- Carousel ---------- */
-
 .carousel {
-  position: relative; /* anchors the buttons to their own carousel */
+  position: relative;
   width: 100%;
   margin: 1.5rem 0;
 }
 
 .carousel-slider {
   display: flex;
-  align-items: stretch; /* slides fill the full fixed height */
+  align-items: stretch;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   border-radius: 12px;
   width: 100%;
-  height: clamp(300px, 60vh, 650px); /* one fixed height for every image */
+  height: clamp(300px, 60vh, 650px);
   background: rgba(0, 0, 0, 0.05);
 }
 
@@ -104,18 +102,17 @@ h2 {
   display: flex;
   justify-content: center;
   scroll-snap-align: center;
-  overflow: hidden; /* zoomed image stays inside its slide */
+  overflow: hidden;
 }
 
 .carousel-slide img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* whole image visible, centered, never cropped */
+  object-fit: contain;
   transition: transform 0.25s ease;
 }
 
-/* Buttons */
 .carousel-btn {
   position: absolute;
   z-index: 2;

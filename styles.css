@@ -115,16 +115,6 @@ h2 {
   transition: transform 0.25s ease;
 }
 
-/* Hover zoom (mouse devices only) */
-@media (hover: hover) {
-  .carousel-slide img {
-    cursor: zoom-in;
-  }
-  .carousel-slide img:hover {
-    transform: scale(2); /* zoom level, try 1.5 to 3 */
-  }
-}
-
 /* Buttons */
 .carousel-btn {
   position: absolute;

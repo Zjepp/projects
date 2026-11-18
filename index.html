@@ -15,16 +15,17 @@
         <h2>IPSA Quizapplicatie</h2>
         <p class="date">september-november 2025</p>
         <p>
-          Ipsa vzw geeft jaarlijkse bijlessen aan apotheken, maar wilde er voor
-          zorgen dat er een mogelijkheid bestond om het bijgeleerde materiaal
-          tijdens het jaar te onderhouden en als voorbeeld hadden Duolingo
-          opgegeven.
+          Ipsa vzw geeft jaarlijkse bijlessen aan apotheken, maar wilde er ook
+          voor zorgen dat er een mogelijkheid bestond om het bijgeleerde
+          materiaal tijdens het jaar te onderhouden. Liefst was dit op een
+          speelse manier zodat de apothekers het minder als een taak zien.
         </p>
 
         <p>
           Wij hebben dan een mobiele quizapplicatie ontworpen waar mensen op een
           speelse manier hun aangeleerde lessen kunnen onderhouden tijdens werk,
-          pauzes of van thuisuit.
+          pauzes of van thuis uit. De Quizvragen bestaan uit 3 varianten:
+          meerkeuzevraag, meerkeuzevraag met timer en galgje.
         </p>
         <div class="techstack">
           <div>
@@ -63,14 +64,18 @@
         <p>
           Ik heb mijn stage bij scholenkring CKSA gedaan, waar ik geholpen heb
           met het oplossen van technische problemen alsook een intern
-          bestelplatform voor hun scholen heb opgezet
+          bestelplatform voor hun scholen heb opgezet.
         </p>
         <p>
-          Voor dit bestelplatform was het nodig dat ouders items voor
+          Voor dit bestelplatform was het noodzakelijk dat ouders items voor
           schooleventen kunnen bestellen en dat de scholen hier een duidelijk
           overzicht van hadden. Scholen kunnen ook eventen aanmaken en items
           hieraan toevoegen om ze "bestelbaar" te maken. Frontend gemaakt in
-          custom webpart gehost op Sharepoint.
+          custom webpart gehost op Sharepoint voor scholen en het
+          bestelformulier is extern gehost zodat het aanpasbaar is voor elk
+          event. De backend die alles bij elkaar houdt en bevestigingsmails zit
+          in Power Automate. Voor database is er ook beslist om Lists te
+          gebruiken.
         </p>
         <div class="techstack">
           <div>
@@ -167,15 +172,28 @@
         <p>
           Dit project is voor Foodatelier Cesar. Foodatelier Cesar is een
           bedrijf dat zich richt op het maken van gezonde en lekkere maaltijden.
-          Ze zoeken naar een goed onderhoudbaar bestelsysteem dat hen helpt bij
+          Ze zochten naar een goed onderhoudbaar bestelsysteem dat hen helpt bij
           het beheren van hun bestellingen en klanten. Ze willen dat het systeem
           schaalbaar is, zodat ze in de toekomst kunnen groeien zonder
           problemen.
         </p>
         <p>
-          Wij hebben hiervoor een bestelplatform ontworpen waar scholen accounts
-          kunnen aanmaken alsook ouders. Beide hebben hun eigen dashboard waar
-          ze maaltijden kunnen bestellen en hun profielen kunnen aanpassen.
+          Wij hebben hiervoor een bestelplatform ontworpen waar ouders accounts
+          kunnen aanmaken en hun kind(eren) kunnen linken aan bestaande scholen.
+          Scholen moeten eerst worden aangemaakt door het adminaccount en daarna
+          kan deze ook bestellen en/of een overzicht van bestelde maaltijden
+          opvragen. Het admin account heeft overzicht over scholen in het
+          systeem en het aantal bestellingen dat ze hieraan moeten leveren.
+          Alsook kunnen ze maaltijden inplannen, prijzen aanpassen en allergieën
+          toevoegen.
+        </p>
+        <p>
+          Tijdens dit project had ik als gecombineerde rol Software Developer en
+          Quality Assurance. Ik implementeerde dus gewenste functies en sprak
+          met de klant over wat er haalbaar was voor de deadline, alsook was ik
+          verantwoordelijk voor de test coverage en de kwaliteit van onze code.
+          Dit behaalden we met behulp van geautomatiseerde testen voor pull
+          requests en code coverage reports door Jacoco.
         </p>
         <div class="techstack">
           <div>
@@ -186,6 +204,18 @@
           </div>
           <div>
             <p>PostgreSQL</p>
+          </div>
+          <div>
+            <p>Jest</p>
+          </div>
+          <div>
+            <p>Playwright</p>
+          </div>
+          <div>
+            <p>JUnit</p>
+          </div>
+          <div>
+            <p>Mockito</p>
           </div>
         </div>
         <div class="carousel">
@@ -255,18 +285,25 @@
       </section>
     </main>
     <script>
-      const AUTOPLAY_DELAY = 2500;
+      const AUTOPLAY_DELAY = 3500;
 
       document.querySelectorAll(".carousel").forEach((carousel) => {
         const slider = carousel.querySelector(".carousel-slider");
-        const count = slider.children.length;
+        const count = slider.children.length; // real slides only
+
+        // Infinite loop: append a copy of the first slide at the end
+        const clone = slider.children[0].cloneNode(true);
+        clone.setAttribute("aria-hidden", "true");
+        slider.appendChild(clone);
 
         let timer = null;
         let anim = null;
+        let animating = false;
+        let settleTimer = null;
         let hovering = false;
         let focused = false;
         let touching = false;
-        let userPaused = false; // always start playing
+        let userPaused = false;
         let ignoreHover = false;
 
         const makeButton = (cls, label, symbol) => {
@@ -283,17 +320,25 @@
         const next = makeButton("next", "Next image", "›");
         const toggle = makeButton("toggle", "Pause autoplay", "❚❚");
 
-        const currentIndex = () =>
+        // raw index: 0..count (count = the clone)
+        const rawIndex = () =>
           Math.round(slider.scrollLeft / slider.clientWidth);
 
-        // --- smooth scrolling (works even if the OS disables animations) ---
+        // instant jump with snapping temporarily off
+        const jumpTo = (index) => {
+          slider.style.scrollSnapType = "none";
+          slider.scrollLeft = index * slider.clientWidth;
+        };
+
         const cancelAnim = () => {
           cancelAnimationFrame(anim);
+          animating = false;
           slider.style.scrollSnapType = "";
         };
 
-        const animateTo = (target) => {
+        const animateTo = (targetIndex) => {
           cancelAnimationFrame(anim);
+          const target = targetIndex * slider.clientWidth;
           const start = slider.scrollLeft;
           const delta = target - start;
           if (Math.abs(delta) < 1) return;
@@ -304,25 +349,59 @@
           const ease = (t) =>
             t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-          slider.style.scrollSnapType = "none"; // snapping would fight the animation
+          animating = true;
+          slider.style.scrollSnapType = "none";
 
           const step = (now) => {
             const t = Math.min((now - t0) / duration, 1);
             slider.scrollLeft = start + delta * ease(t);
-            if (t < 1) anim = requestAnimationFrame(step);
-            else slider.style.scrollSnapType = "";
+            if (t < 1) {
+              anim = requestAnimationFrame(step);
+            } else {
+              animating = false;
+              // landed on the clone? silently jump to the real first slide
+              if (targetIndex === count) slider.scrollLeft = 0;
+              slider.style.scrollSnapType = "";
+            }
           };
           anim = requestAnimationFrame(step);
         };
 
-        const goTo = (i) => {
-          const index = (i + count) % count;
-          animateTo(index * slider.clientWidth);
+        const goNext = () => {
+          let i = rawIndex();
+          if (i >= count) {
+            jumpTo(0);
+            i = 0;
+          }
+          animateTo(i + 1); // from the last slide this glides onto the clone
         };
-        const goNext = () => goTo(currentIndex() + 1);
-        const goPrev = () => goTo(currentIndex() - 1);
 
-        // --- autoplay logic ---
+        const goPrev = () => {
+          let i = rawIndex();
+          if (i <= 0) {
+            jumpTo(count);
+            i = count;
+          } // start on the clone, glide back
+          animateTo(i - 1);
+        };
+
+        // After a manual swipe/scroll onto the clone, jump back to the real first slide
+        slider.addEventListener("scroll", () => {
+          clearTimeout(settleTimer);
+          settleTimer = setTimeout(() => {
+            if (!animating && rawIndex() >= count) {
+              jumpTo(0);
+              slider.style.scrollSnapType = "";
+            }
+          }, 120);
+        });
+
+        // Keep alignment on window resize
+        window.addEventListener("resize", () => {
+          jumpTo(Math.min(rawIndex(), count));
+          slider.style.scrollSnapType = "";
+        });
+
         const stop = () => {
           clearInterval(timer);
           timer = null;
@@ -357,7 +436,7 @@
         });
         toggle.addEventListener("click", () => {
           userPaused = !userPaused;
-          ignoreHover = !userPaused; // pressing play overrides hover until the mouse leaves
+          ignoreHover = !userPaused;
           syncToggle();
           update();
         });
@@ -377,7 +456,7 @@
         });
 
         carousel.addEventListener("focusin", (e) => {
-          focused = e.target.matches(":focus-visible"); // only keyboard focus pauses
+          focused = e.target.matches(":focus-visible");
           update();
         });
         carousel.addEventListener("focusout", () => {
@@ -405,16 +484,6 @@
           { passive: true },
         );
         slider.addEventListener("wheel", cancelAnim, { passive: true });
-
-        // zoom follows the mouse, so you can pan around the enlarged image
-        slider.addEventListener("mousemove", (e) => {
-          const img = e.target.closest("img");
-          if (!img) return;
-          const r = img.getBoundingClientRect();
-          const x = ((e.clientX - r.left) / r.width) * 100;
-          const y = ((e.clientY - r.top) / r.height) * 100;
-          img.style.transformOrigin = `${x}% ${y}%`;
-        });
 
         document.addEventListener("visibilitychange", update);
 

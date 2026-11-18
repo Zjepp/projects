@@ -132,13 +132,14 @@ main {
 section {
   border: #000000 solid 3px;
   padding: clamp(8px, 1.25vw, 16px);
-  margin-bottom: 2vh;
+  margin-bottom: 4vh;
   box-shadow: var(--shadow-card) -7px 7px 5px 5px;
   background-color: var(--card-bg);
 }
 
 section p {
   padding-left: 5px;
+  max-width: 900px;
 }
 
 h2 {

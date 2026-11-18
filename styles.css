@@ -137,6 +137,10 @@ section {
   background-color: var(--card-bg);
 }
 
+section p {
+  padding-left: 5px;
+}
+
 h2 {
   color: var(--h2);
   margin-top: 0;

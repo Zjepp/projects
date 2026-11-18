@@ -19,8 +19,105 @@ header {
   justify-content: space-between;
   gap: clamp(8px, 1.25vw, 16px);
   padding: clamp(8px, 1.25vw, 16px);
+  padding: auto;
   background-color: var(--secondary-bg);
   color: var(--primary-bg);
+}
+
+.header {
+  max-width: min(100%, 1280px);
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.foto {
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.header-left {
+  display: flex;
+  gap: 3vw;
+}
+
+.header-left div {
+  align-content: center;
+}
+
+.header-right {
+  padding: 0;
+  text-align: right;
+  align-self: center;
+  font-size: 13px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.header-right p {
+  display: flex;
+  justify-self: end;
+}
+.header-right svg {
+  margin: 0 0 clamp(4px, 0.6vw, 8px) clamp(4px, 0.6vw, 8px);
+  fill: #fff;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+header p {
+  margin: 0;
+}
+
+header a {
+  text-decoration: none;
+  color: var(--primary-bg);
+  transition: all 150ms linear;
+}
+
+.header-right p a {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+header a:hover {
+  color: var(--font);
+  transition: all 150ms linear;
+}
+
+.icons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: clamp(4px, 0.6vw, 8px);
+}
+
+.icons a {
+  border-radius: 4px;
+  padding: 4px;
+  margin: 2px;
+  align-items: baseline;
+  display: flex;
+  background-color: var(--font);
+  overflow: visible;
+  white-space: normal;
+}
+
+.icons a:hover {
+  background-color: var(--shadow-card);
+}
+
+.date {
+  font-style: italic;
 }
 
 main {
@@ -51,6 +148,7 @@ h2 {
   list-style-type: none;
   display: flex;
   flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 3vh;
 }
 
@@ -151,4 +249,25 @@ h2 {
   width: 34px;
   height: 34px;
   font-size: 0.8rem;
+}
+
+@media (min-width: 601px) {
+  .header {
+    grid-template-columns: 2fr 1fr;
+    gap: normal;
+  }
+
+  .foto {
+    display: inline;
+    align-self: center;
+  }
+
+  .header-right {
+    padding: 0 clamp(16px, 2.5vw, 32px);
+    font-size: 15px;
+  }
+
+  header h1 {
+    font-size: 2em;
+  }
 }
